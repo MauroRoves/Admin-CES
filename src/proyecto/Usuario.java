@@ -8,8 +8,6 @@ public class Usuario {
     private String contrasena;
     private String pais;
 
-    public Usuario() {
 
-    }
 }
 
