@@ -2,11 +2,11 @@ package proyecto;
 
 public class Usuario {
 
-    private String nombre;
-    private String apellido;
-    private String email;
-    private String contrasena;
-    private String pais;
+    String nombre;
+    String apellido;
+    String email;
+    String contrasena;
+    String pais;
 
 
 }
