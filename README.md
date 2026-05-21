@@ -23,3 +23,16 @@ Ver y editar perfil de usuario admin
 Permite ver datos del propio usuario y editarlos.
 Eliminar usuario	
 Permite eliminar un usuario de tester 
+
+
+20/5/2026
+
+Se implementaron las funcionalidades basicas
+Login
+Registro
+
+
+Validaciones de funcionalidades Login y Registro
+Verificar usuario existente
+Validar credenciales
+
