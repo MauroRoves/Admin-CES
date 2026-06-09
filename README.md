@@ -58,6 +58,8 @@ Se incorporo la herencia en Adminitrador y Tester
 
 Diagrama UML
 
+![2026-06-08 20_48_43-Window.png](../../Desktop/CURSO%20CES/Curso%20programacion/Entrega%203/2026-06-08%2020_48_43-Window.png)
+
 class Main {
 +main(String[])
 }
