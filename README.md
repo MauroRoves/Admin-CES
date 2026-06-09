@@ -36,3 +36,72 @@ Validaciones de funcionalidades Login y Registro
 Verificar usuario existente
 Validar credenciales
 
+
+6/8/2026
+
+Se crearon las clases :
+
+Usuario
+SistemaUsuarios
+Main
+Tester
+Administrador
+
+Se agregaron:
+
+atributos privados
+getters/setters
+constructor
+
+Se incorporo la herencia en Adminitrador y Tester
+
+
+Diagrama UML
+
+class Main {
++main(String[])
+}
+
+class Usuario {
+-String nombre
+-String apellido
+-String email
+-String contrasena
+-String pais
+-String rol
+
+    +Usuario(nombre, apellido, email, contrasena, pais, rol)
+    +getNombre() String
+    +getApellido() String
+    +getEmail() String
+    +getContrasena() String
+    +getPais() String
+    +getRol() String
+    +setNombre()
+    +setApellido()
+    +setEmail()
+    +setContrasena()
+    +setPais()
+    +setRol()
+}
+
+class SistemaUsuarios {
+-ArrayList~Usuario~ usuarios
+-Scanner scan
+
+    -cargarUsuarios() String
+    +existeEmail(boolean) String
+    +login() String
+    +listarUsuarios() String
+    +mostrarMenu() String
+    +menuLogin() String
+    +menuRegistro() String
+}
+
+class Tester {
++Tester(nombre, apellido, email, contrasena, pais, rol)
+}
+
+class Administrador {
++Administrador(nombre, apellido, email, contrasena, pais, rol)
+}
