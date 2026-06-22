@@ -1,18 +1,19 @@
 package proyecto;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class SistemaUsuarios {
 
-    private ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+    private List<Usuario> usuarios = new ArrayList<Usuario>();
     private Scanner scan = new Scanner(System.in);
 
     public SistemaUsuarios() {
         cargarUsuarios();
     }
 
-    // ── Carga usuarios de prueba ─────────────────────────────────────────────
+    //  Carga usuarios de prueba
     private void cargarUsuarios() {
         usuarios.add(new Administrador("Julio", "Perez",     "julio@gmail.com", "13245678", "Uruguay", "Senior"));
         usuarios.add(new Administrador("Pepe",  "Rodriguez", "pepe@gmail.com",  "54321678", "Uruguay", "Semisenior"));
@@ -20,7 +21,7 @@ public class SistemaUsuarios {
         usuarios.add(new Tester("Ana",    "Gonzales",  "ana@gmail.com", "34567890", "Uruguay", "Senior"));
     }
 
-    // ── Verificar si un email ya existe ──────────────────────────────────────
+    // Verificar si un email ya existe
     public boolean existeEmail(String email) {
         for (Usuario usuario : usuarios) {
             if (usuario.getEmail().equals(email)) {
@@ -30,8 +31,8 @@ public class SistemaUsuarios {
         return false;
     }
 
-    // ── Buscar usuario por email y contraseña (para login) ───────────────────
-    public Usuario login(String email, String contrasena) {
+    // Buscar usuario por email y contraseña (para login)
+    public Usuario login (String email, String contrasena) {
         for (int i = 0; i < usuarios.size(); i++) {
             if (usuarios.get(i).getEmail().equals(email) && usuarios.get(i).getContrasena().equals(contrasena)) {
                 return usuarios.get(i);
@@ -40,30 +41,44 @@ public class SistemaUsuarios {
         return null;
     }
 
-    // ── Listar todos los usuarios ─────────────────────────────────────────────
+    // Listar todos los usuarios
     public void listarUsuarios() {
         System.out.println("\n--- LISTA DE USUARIOS ---");
         for (int i = 0; i < usuarios.size(); i++) {
-            String tipo = "Usuario";
-            if (usuarios.get(i) instanceof Administrador) {
-                tipo = "Administrador";
-            } else if (usuarios.get(i) instanceof Tester) {
-                tipo = "Tester";
+            usuarios.get(i).comp();
             }
-            System.out.println((i + 1) + ". " + usuarios.get(i).getNombre() + " " + usuarios.get(i).getApellido() + " | " + tipo);
+
+    }
+
+    // Buscar usuario por nombre o email
+    public void buscarUsuario(String criterio) {
+        System.out.println("\n--- RESULTADO DE LA BUSQUEDA ---");
+        boolean encontrado = false;
+        for (int i = 0; i < usuarios.size(); i++ ) {
+            Usuario u = usuarios.get(i);
+            if (u.getNombre(). equalsIgnoreCase(criterio) || u.getEmail().equalsIgnoreCase(criterio)) {
+                u.comp();
+                encontrado = true;
+            }
+        }
+        if (!encontrado){
+            System.out.println("No se encontro ningun usuario con ese criterio");
         }
     }
 
-    // ── Menú principal ────────────────────────────────────────────────────────
+
+
+    // Menú principal
     public void mostrarMenu() {
         int opcion = 0;
 
-        while (opcion != 4) {
+        while (opcion != 5) {
             System.out.println("\n--- MENU ---");
             System.out.println("1- Login");
             System.out.println("2- Registro");
-            System.out.println("3- Ver lista de usuarios");
-            System.out.println("4- Salir");
+            System.out.println("3- Listar Usuarios");
+            System.out.println("4- Buscar Usuarios");
+            System.out.println("5- Salir");
 
             opcion = Integer.parseInt(scan.nextLine());
 
@@ -74,14 +89,18 @@ public class SistemaUsuarios {
             } else if (opcion == 3) {
                 listarUsuarios();
             } else if (opcion == 4) {
-                System.out.println("Saliendo...");
+                System.out.println("Ingrese nombre o email a buscar");
+                String criterio = scan.nextLine();
+                buscarUsuario(criterio);
+            } else if (opcion == 5) {
+                System.out.println("Saliendo.");
             } else {
-                System.out.println("Opcion invalida.");
+                System.out.println("Opcion invalida");
             }
         }
     }
 
-    // ── Pantalla de login ─────────────────────────────────────────────────────
+    // Pantalla de login
     private void menuLogin() {
         System.out.println("Ingrese email:");
         String email = scan.nextLine();
@@ -93,20 +112,13 @@ public class SistemaUsuarios {
 
         if (resultado != null) {
             System.out.println("Login exitoso. Bienvenido " + resultado.getNombre());
-
-            if (resultado instanceof Administrador) {
-                Administrador admin = (Administrador) resultado;
-                System.out.println("Rol: " + admin.getRol());
-            } else if (resultado instanceof Tester) {
-                Tester tester = (Tester) resultado;
-                System.out.println("Tipo de tester: " + tester.getRol());
-            }
+            resultado.comp();
         } else {
-            System.out.println("Email o contrasena incorrectos.");
+            System.out.println("Email o contraseña incorrectos");
         }
     }
 
-    // ── Pantalla de registro ──────────────────────────────────────────────────
+    //  Pantalla de registro
     private void menuRegistro() {
         System.out.println("Que tipo de usuario desea registrar?");
         System.out.println("1- Administrador");

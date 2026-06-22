@@ -2,7 +2,8 @@ package proyecto;
 
 import java.util.Scanner;
 
-public class Usuario {
+
+public class Usuario implements Comportamiento {
 
     private String nombre;
     private String apellido;
@@ -70,6 +71,11 @@ public class Usuario {
 
     public String getTipo() {
         return "Usuario";
+    }
+
+    @Override
+    public void comp() {
+        System.out.println("Usuario: " + nombre + " " + apellido + " " + email);
     }
 
 

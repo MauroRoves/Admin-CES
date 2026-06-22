@@ -107,3 +107,6 @@ class Tester {
 class Administrador {
 +Administrador(nombre, apellido, email, contrasena, pais, rol)
 }
+
+
+![img.png](img.png)
