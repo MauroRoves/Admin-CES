@@ -1,7 +1,5 @@
 package proyecto;
 
-import java.util.Scanner;
-
 
 public class Usuario implements Comportamiento {
 
@@ -10,15 +8,14 @@ public class Usuario implements Comportamiento {
     private String email;
     private String contrasena;
     private String pais;
-    private String rol;
 
-    public Usuario(String nombre, String apellido, String email, String contrasena, String pais, String rol) {
+
+    public Usuario(String nombre, String apellido, String email, String contrasena, String pais) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.contrasena = contrasena;
         this.pais = pais;
-        this.rol = rol;
     }
 
     public String getNombre() {
@@ -61,13 +58,6 @@ public class Usuario implements Comportamiento {
         this.pais = pais;
     }
 
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
 
     public String getTipo() {
         return "Usuario";

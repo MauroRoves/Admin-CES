@@ -2,7 +2,7 @@ package proyecto;
 
 public class Main {
     public static void main(String[] args) {
-        SistemaUsuarios acceso = new SistemaUsuarios();
+        SistemaUsuarios acceso = SistemaUsuarios.getInstancia();
         acceso.mostrarMenu();
     }
 }
