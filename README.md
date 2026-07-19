@@ -109,4 +109,49 @@ class Administrador {
 }
 
 
-![img.png](img.png)
+
+
+7/17/2026
+
+Se dividieron los menu por rol: Menu de acceso y Menu principal
+Menu de acceso: Login y registro de Administrador
+Menu principal: Permite registrar Tester, buscar usuario, listar usuario,salir
+
+
+Se quitó el atributo "rol" a Usuario y se movio a la clase Tester.
+
+
+7/18/2026
+
+Manejo de excepciones
+
+Se crearon dos excepciones personalizadas en un package diferente:
+- EmailDuplicadoException: se lanza al intentar registrar un email ya existente
+- UsuarioNoEncontradoException: se lanza cuando un login o búsqueda no encuentra el usuario esperado.
+
+
+Tambien se utilizaron excepciones estandar de Java
+
+- InputMismatchException: entrada no numérica en el menú.
+- IllegalArgumentException: opción de menú inexistente
+
+
+7/19/2026
+
+Validacion de datos
+
+Campos obligatorios no vacios
+Formato de email valido con expresion regular de java
+Longitud minima de la contraseña de 5 digitos
+
+
+Patron Singleton:
+
+Se cambio el contructor de SistemaUsuarios de public a private
+Se agrego atributo estático
+Se agregó el método public static SistemaUsuarios getInstancia()
+
+Actualizacion de diagrama UML
+
+
+![UML.drawio.png](../../Downloads/UML.drawio.png)
