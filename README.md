@@ -154,4 +154,4 @@ Se agregó el método public static SistemaUsuarios getInstancia()
 Actualizacion de diagrama UML
 
 
-![UML.drawio.png](../../Downloads/UML.drawio.png)
+![UML.drawio.png](UML.drawio.png)
