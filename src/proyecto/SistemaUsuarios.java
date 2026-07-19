@@ -10,8 +10,8 @@ import java.util.Scanner;
 
 public class SistemaUsuarios {
 
-    private static final int LARGO_MINIMO_CONTRASENA = 5;
-    private static final String FORMATO_EMAIL = "^[\\w.+-]+@[\\w-]+\\.[a-zA-Z]{2,}$";
+    private static final int largoMinimo = 5;
+    private static final String formatoEmail = "^[\\w.+-]+@[\\w-]+\\.[a-zA-Z]{2,}$";
 
     // Atributo estatico y privado que guarda la unica instancia de la clase (patron Singleton)
     private static SistemaUsuarios instancia;
@@ -53,7 +53,7 @@ public class SistemaUsuarios {
         if (email == null || email.trim().isEmpty()) {
             throw new IllegalArgumentException("El email es obligatorio.");
         }
-        if (!email.matches(FORMATO_EMAIL)) {
+        if (!email.matches(formatoEmail)) {
             throw new IllegalArgumentException("El email ingresado no tiene un formato valido.");
         }
         if (pais == null || pais.trim().isEmpty()) {
@@ -62,25 +62,25 @@ public class SistemaUsuarios {
         if (contrasena == null || contrasena.trim().isEmpty()) {
             throw new IllegalArgumentException("La contrasena es obligatoria.");
         }
-        if (contrasena.length() < LARGO_MINIMO_CONTRASENA) {
-            throw new IllegalArgumentException("La contrasena debe tener al menos " + LARGO_MINIMO_CONTRASENA + " caracteres.");
+        if (contrasena.length() < largoMinimo) {
+            throw new IllegalArgumentException("La contrasena debe tener al menos " + largoMinimo + " caracteres.");
         }
     }
 
     // Verificar si un email ya existe
     public boolean existeEmail(String email) {
         for (Usuario usuario : usuarios) {
-            if (usuario.getEmail().equals(email)) {
+            if (usuario.getEmail().equalsIgnoreCase(email)) {
                 return true;
             }
         }
         return false;
     }
 
-    // Buscar usuario por email y contraseña (para login)
+    // Buscar usuario por email y contraseña
     public Usuario login(String email, String contrasena) throws UsuarioNoEncontradoException {
         for (int i = 0; i < usuarios.size(); i++) {
-            if (usuarios.get(i).getEmail().equals(email) && usuarios.get(i).getContrasena().equals(contrasena)) {
+            if (usuarios.get(i).getEmail().equalsIgnoreCase(email) && usuarios.get(i).getContrasena().equals(contrasena)) {
                 return usuarios.get(i);
             }
         }
@@ -95,63 +95,70 @@ public class SistemaUsuarios {
         }
     }
 
-    // Buscar usuario por nombre o email
-    public void buscarUsuario(String criterio) throws UsuarioNoEncontradoException {
+    // Buscar usuario por email
+    public void buscarUsuarioPorEmail(String email) throws UsuarioNoEncontradoException {
         System.out.println("\n--- RESULTADO DE LA BUSQUEDA ---");
-        boolean encontrado = false;
         for (int i = 0; i < usuarios.size(); i++) {
             Usuario u = usuarios.get(i);
-            if (u.getNombre().equalsIgnoreCase(criterio) || u.getEmail().equalsIgnoreCase(criterio)) {
+            if (u.getEmail().equalsIgnoreCase(email)) {
                 u.comp();
-                encontrado = true;
+                return;
             }
         }
-        if (!encontrado) {
-            throw new UsuarioNoEncontradoException("Dato invalido: '" + criterio + "' no corresponde a ningun usuario registrado.");
-        }
+        throw new UsuarioNoEncontradoException("No existe un usuario registrado con el email '" + email + "'.");
     }
 
-    // Lee una opcion numerica del menu. Puede lanzar NumberFormatException (excepcion estandar de Java).
+    // Lee una opcion numerica del menu.
     private int leerOpcion() {
         String entrada = scan.nextLine();
         return Integer.parseInt(entrada.trim());
     }
 
-    // ---------------- MENU DE ACCESO (solo Administrador) ----------------
+    // MENU DE ACCESO (solo Administrador)
 
     public void mostrarMenu() {
-        Usuario adminActivo = null;
+        boolean salirPrograma = false;
 
-        while (adminActivo == null) {
-            System.out.println("\n--- ACCESO ADMINISTRADOR ---");
-            System.out.println("1- Login Administrador");
-            System.out.println("2- Registro Administrador");
-            System.out.println("3- Salir");
+        while (!salirPrograma) {
+            Usuario adminActivo = null;
 
-            try {
-                int opcion = leerOpcion();
+            while (adminActivo == null && !salirPrograma) {
+                System.out.println("\n--- ACCESO ADMINISTRADOR ---");
+                System.out.println("1- Iniciar Sesion");
+                System.out.println("2- Registro Administrador");
+                System.out.println("3- Salir");
 
-                if (opcion == 1) {
-                    adminActivo = menuLoginAdministrador();
-                } else if (opcion == 2) {
-                    adminActivo = menuRegistroAdministrador();
-                } else if (opcion == 3) {
-                    System.out.println("Saliendo.");
-                    return;
-                } else {
-                    throw new IllegalArgumentException("La opcion " + opcion + " no existe en el menu.");
+                try {
+                    int opcion = leerOpcion();
+
+                    if (opcion == 1) {
+                        adminActivo = menuLoginAdministrador();
+                    } else if (opcion == 2) {
+                        adminActivo = menuRegistroAdministrador();
+                    } else if (opcion == 3) {
+                        System.out.println("Saliendo del sistema.");
+                        salirPrograma = true;
+                    } else {
+                        throw new IllegalArgumentException("La opcion " + opcion + " no existe en el menu.");
+                    }
+                } catch (NumberFormatException | InputMismatchException e) {
+                    System.out.println("Error: debe ingresar un numero. Intente nuevamente.");
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Error: " + e.getMessage());
+                } catch (UsuarioNoEncontradoException | EmailDuplicadoException e) {
+                    System.out.println("Error: " + e.getMessage());
                 }
-            } catch (NumberFormatException | InputMismatchException e) {
-                System.out.println("Error: debe ingresar un numero. Intente nuevamente.");
-            } catch (IllegalArgumentException e) {
-                System.out.println("Error: " + e.getMessage());
-            } catch (UsuarioNoEncontradoException | EmailDuplicadoException e) {
-                System.out.println("Error: " + e.getMessage());
+            }
+
+            if (adminActivo != null) {
+                boolean cerrarSesion = menuPrincipal(adminActivo);
+                if (!cerrarSesion) {
+                    salirPrograma = true;
+                }
             }
         }
 
-        // Una vez logueado/registrado como Administrador, se accede al menu principal
-        menuPrincipal();
+        System.out.println("Sesion finalizada. Hasta luego.");
     }
 
     private Usuario menuLoginAdministrador() throws UsuarioNoEncontradoException {
@@ -200,45 +207,51 @@ public class SistemaUsuarios {
         return nuevoAdmin;
     }
 
-    // ---------------- MENU PRINCIPAL (tras acceso de Administrador) ----------------
+    //  MENU PRINCIPAL
 
-    private void menuPrincipal() {
-        int opcion = 0;
+    private boolean menuPrincipal(Usuario adminActivo) {
+        boolean cerrarSesion = false;
+        boolean salir = false;
 
-        while (opcion != 4) {
+        while (!cerrarSesion && !salir) {
             System.out.println("\n--- MENU PRINCIPAL ---");
+            System.out.println("Sesion iniciada como: " + adminActivo.getNombre() + " " + adminActivo.getApellido());
             System.out.println("1- Registrar Tester");
-            System.out.println("2- Buscar Usuarios");
+            System.out.println("2- Buscar Usuario por Email");
             System.out.println("3- Listar Usuarios");
-            System.out.println("4- Salir");
+            System.out.println("4- Cerrar Sesion");
+            System.out.println("5- Salir");
 
             try {
-                opcion = leerOpcion();
+                int opcion = leerOpcion();
 
                 if (opcion == 1) {
                     menuRegistroTester();
                 } else if (opcion == 2) {
-                    System.out.println("Ingrese nombre o email a buscar");
-                    String criterio = scan.nextLine();
-                    buscarUsuario(criterio);
+                    System.out.println("Ingrese el email a buscar:");
+                    String email = scan.nextLine();
+                    buscarUsuarioPorEmail(email);
                 } else if (opcion == 3) {
                     listarUsuarios();
                 } else if (opcion == 4) {
-                    System.out.println("Saliendo.");
+                    System.out.println("Cerrando sesion...");
+                    cerrarSesion = true;
+                } else if (opcion == 5) {
+                    System.out.println("Saliendo del sistema.");
+                    salir = true;
                 } else {
                     throw new IllegalArgumentException("La opcion " + opcion + " no existe en el menu.");
                 }
             } catch (NumberFormatException | InputMismatchException e) {
                 System.out.println("Error: debe ingresar un numero. Intente nuevamente.");
-                opcion = 0;
             } catch (IllegalArgumentException e) {
                 System.out.println("Error: " + e.getMessage());
-                opcion = 0;
             } catch (UsuarioNoEncontradoException | EmailDuplicadoException e) {
                 System.out.println("Error: " + e.getMessage());
-                opcion = 0;
             }
         }
+
+        return cerrarSesion;
     }
 
     private void menuRegistroTester() throws EmailDuplicadoException {
